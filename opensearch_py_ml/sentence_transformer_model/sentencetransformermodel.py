@@ -46,19 +46,19 @@ class SentenceTransformerModel:
             self.model_id = model_id
 
     def train(
-        self,
-        read_path: str,
-        overwrite: bool = False,
-        output_model_name: str = None,
-        output_model_path: str = None,
-        zip_file_name: str = None,
-        use_accelerate: bool = False,
-        compute_environment: str = None,
-        num_machines: int = 1,
-        num_processes: int = None,
-        learning_rate: float = 2e-5,
-        num_epochs: int = 20,
-        verbose: bool = False,
+            self,
+            read_path: str,
+            overwrite: bool = False,
+            output_model_name: str = None,
+            output_model_path: str = None,
+            zip_file_name: str = None,
+            use_accelerate: bool = False,
+            compute_environment: str = None,
+            num_machines: int = 1,
+            num_processes: int = None,
+            learning_rate: float = 2e-5,
+            num_epochs: int = 20,
+            verbose: bool = False,
     ) -> None:
         """
         Read the synthetic queries and use it to fine tune/train (and save) a sentence transformer model.
@@ -150,7 +150,7 @@ class SentenceTransformerModel:
                 verbose,
             )
 
-        self.zip_model(output_model_path, zip_file_name)
+        self.zip_model(output_model_name, zip_file_name)
         return None
 
     #    public step by step functions:
@@ -254,7 +254,7 @@ class SentenceTransformerModel:
         return df
 
     def load_sentence_transformer_example(
-        self, df, use_accelerate: bool = False
+            self, df, use_accelerate: bool = False
     ) -> List[str]:
         """
         Description:
@@ -294,15 +294,15 @@ class SentenceTransformerModel:
         return train_examples
 
     def train_model(
-        self,
-        train_examples: List[str],
-        model_id: str = None,
-        output_path: str = None,
-        output_model_name: str = None,
-        use_accelerate: bool = False,
-        learning_rate: float = 2e-5,
-        num_epochs: int = 20,
-        verbose: bool = False,
+            self,
+            train_examples: List[str],
+            model_id: str = None,
+            output_path: str = None,
+            output_model_name: str = None,
+            use_accelerate: bool = False,
+            learning_rate: float = 2e-5,
+            num_epochs: int = 20,
+            verbose: bool = False,
     ):
         """
         Description:
@@ -418,7 +418,7 @@ class SentenceTransformerModel:
             for epoch in range(num_epochs):
                 print("Training epoch " + str(epoch) + "...")
                 for step, batch in tqdm(
-                    enumerate(train_dataloader), total=len(train_dataloader)
+                        enumerate(train_dataloader), total=len(train_dataloader)
                 ):
 
                     batch_q = batch[0]
@@ -455,6 +455,7 @@ class SentenceTransformerModel:
                     if verbose is True and not step % 500 and step != 0:
                         plt.plot(total_loss[::100])
                         plt.show()
+            accelerator.wait_for_everyone()
 
         # IF ACCELERATE IS FALSE
         else:
@@ -485,8 +486,8 @@ class SentenceTransformerModel:
                     batch = []
                     batch_q = []
                     for example in train_examples[
-                        j * batch_size : (j + 1) * batch_size
-                    ]:
+                                   j * batch_size : (j + 1) * batch_size
+                                   ]:
                         batch_q.append(example.texts[1])
                         batch.append(example.texts[0])
 
@@ -565,6 +566,8 @@ class SentenceTransformerModel:
 
         if model_path is None:
             model_path = os.path.join(os.getcwd(), str(model_name + ".pt"))
+        else:
+            model_path = os.path.join(os.getcwd(), str(model_path))
 
         if zip_file_name is None:
             zip_file_name = str(model_name + ".zip")
@@ -583,12 +586,12 @@ class SentenceTransformerModel:
         print("zip file is saved to " + os.getcwd() + "/" + zip_file_name)
 
     def save_as_pt(
-        self,
-        sentences: [str],
-        model=None,
-        model_name: str = None,
-        save_json_folder_name: str = None,
-        zip_file_name: str = None,
+            self,
+            sentences: [str],
+            model=None,
+            model_name: str = None,
+            save_json_folder_name: str = None,
+            zip_file_name: str = None,
     ):
         """
         Description:
@@ -660,10 +663,10 @@ class SentenceTransformerModel:
         return compiled_model
 
     def set_up_accelerate_config(
-        self,
-        compute_environment: str = None,
-        num_machines: int = 1,
-        num_processes: int = None,
+            self,
+            compute_environment: str = None,
+            num_machines: int = 1,
+            num_processes: int = None,
     ) -> None:
         """
         Description:
